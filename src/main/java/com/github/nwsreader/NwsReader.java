@@ -27,8 +27,8 @@ public class NwsReader {
 
 	    // get first json from NWS url points
 	    //String nwsUrl = "https://api.weather.gov/points/38.8894,-77.0352"; // Baltimore/Washington DC
-	    //String nwsUrl = "https://api.weather.gov/points/47.6129,-122.5068"; // Seattle/Wasington
-	    String nwsUrl = "https://api.weather.gov/points/26.0813,-80.2802"; // Davie/FL
+	    String nwsUrl = "https://api.weather.gov/points/47.5896,-122.3331"; // Seattle/Wasington
+	    //String nwsUrl = "https://api.weather.gov/points/26.0813,-80.2802"; // Davie/FL
 
 	    String nwsJson = IOUtils.toString(new URL(nwsUrl).openStream());
 	    //System.out.println(json); // DEGBUG   
