@@ -20,11 +20,47 @@ import com.google.gson.JsonParser;
  * an app to read National Weather Service json data and output to terminal.
  *
  */
-public class NwsReader {
-    public static void main( String[] args ) throws IOException {
-	    // TODO: init git.
-	    // TODO: refactor to a class package to be used in both a terminal reader and an android widget.
+public class NwsReader { // TODO: refactor to a class package for terminal reader and an android widget.
 
+	/*
+	// TODO: declare field
+	Private String nwsUrl;
+	Private JsonObject nwsObject;
+	Private JsonObject propertiesObj;
+	Private JsonObject relativeLocationObj;
+	Private JsonObject relLocPropertiesObj;
+	Private JsonObject propertiesObj;
+	Private JsonObject forecastOfficeObj;
+	Private JsonObject forecastObj;
+	Private JsonObject forecastPropertiesObj;
+	Private JsonArray periodsArr;
+
+	Public double[] coordinates;
+	Public String city;
+	Public String State;
+	Public String forecastOffice;
+	Public String radarStation;
+
+	// TODO: understand how to manage data for each period
+	Public String name;
+	Public String temperature;
+	Public String temperatureUnit;
+	Public String windDirection;
+	Public String windSpeed;
+	Public String shortForecast;
+	*/
+
+
+	// public NwsReader(double[] coordinates) { //constrtor takes coordinates
+	// TODO: constructor
+	//
+	// } 
+	
+	// TODO: declare class methods
+	
+    public static void main( String[] args ) throws IOException {
+	    
+	   
 	    // get first json from NWS url points
 	    //String nwsUrl = "https://api.weather.gov/points/38.8894,-77.0352"; // Baltimore/Washington DC
 	    String nwsUrl = "https://api.weather.gov/points/47.5896,-122.3331"; // Seattle/Wasington
@@ -34,7 +70,8 @@ public class NwsReader {
 	    //System.out.println(json); // DEGBUG   
 	    JsonObject nwsObj = new Gson().fromJson(nwsJson, JsonObject.class);
 	   
-	    JsonParser parser = new JsonParser();
+	    JsonParser parser = 
+		    new JsonParser();
 
 	    // get geometry json, and get coordinates array from geometry json
 	    JsonObject geometryObj = nwsObj.getAsJsonObject("geometry");
