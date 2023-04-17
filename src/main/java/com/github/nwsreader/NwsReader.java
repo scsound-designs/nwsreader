@@ -60,8 +60,9 @@ public class NwsReader { // TODO: refactor to a class package for terminal reade
 
     // TODO: declare class methods
 
-    
-    public static void print() {
+    /*
+    private static void print() {
+	DecimalFormat coordFormat = new DecimalFormat("00.0000");
 	System.out.print("\n" + city + ", " + state + "    ");
 	System.out.println(coordFormat.format(coordinates[0]) + ", "
 		+ coordFormat.format(coordinates[1]));
@@ -70,7 +71,8 @@ public class NwsReader { // TODO: refactor to a class package for terminal reade
 		+ "https://radar.weather.gov/station/" 
 		+ radarStation + "/standard\n");
     }
-       
+    */
+
 
     public static void main( String[] args ) throws IOException {
 
