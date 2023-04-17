@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.github.nwsreader.AppTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2023-04-15T22:04:24" hostname="fedora" time="0.001">
+<testsuite name="com.github.nwsreader.AppTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2023-04-16T22:02:43" hostname="KN4APR" time="0.002">
   <properties/>
-  <testcase name="shouldAnswerWithTrue" classname="com.github.nwsreader.AppTest" time="0.001"/>
+  <testcase name="shouldAnswerWithTrue" classname="com.github.nwsreader.AppTest" time="0.002"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
