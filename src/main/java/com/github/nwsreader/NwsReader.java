@@ -22,81 +22,137 @@ import com.google.gson.JsonParser;
  */
 public class NwsReader { // TODO: refactor to a class package for terminal reader and an android widget.
 
-    /*
-    // TODO: declare field
-    Private String nwsUrl;
-    Private JsonObject nwsObject;
-    Private JsonObject propertiesObj;
-    Private JsonObject relativeLocationObj;
-    Private JsonObject relLocPropertiesObj;
-    Private JsonObject propertiesObj;
-    Private JsonObject forecastOfficeObj;
-    Private JsonObject forecastObj;
-    Private JsonObject forecastPropertiesObj;
-    Private JsonArray periodsArr;
+    // field
+    private String nwsUrl;
+    private JsonObject nwsObj;
+    private JsonObject propertiesObj;
+    private JsonObject relativeLocationObj;
+    private JsonObject relLocPropertiesObj;
+    private JsonObject forecastOfficeObj;
+    private JsonObject forecastObj;
+    private JsonObject forecastPropertiesObj;
+    private JsonArray forecastPeriodsArr;
 
-    Public double[] coordinates;
-    Public String city;
-    Public String State;
-    Public String forecastOffice;
-    Public String radarStation;
+    public String city;
+    public String State;
+    public String forecastOffice;
+    public String radarStation;
+    
+    private Array<ForecastPeriod> forecastPeriods[];
 
-    // TODO: understand how to manage data for each period
-    Public String name;
-    Public String temperature;
-    Public String temperatureUnit;
-    Public String windDirection;
-    Public String windSpeed;
-    Public String shortForecast;
-    */
+    private double[] coordinates;
 
+    private Coordinates currentCoordinates;
+    private Coordinates nwsCoordinates;
+    
+    JsonParser parser = new JsonParser();
 
-    /*
+    class ForecastPeriod { 
+	//field
+	String name;
+	String temperature;
+	String temperatureUnit;
+	String windDirection;
+	String windSpeed;
+	String shortForecast;
+
+	int id;
+	JsonObject periodObj;
+
+	//constructor
+	public ForecastPeriod(JsonElement periodElement){
+	    periodObj = periodElement.getAsJsonObject();
+
+	    name = parse("name", periodObj);
+	    temperature = parse("temperature", periodObj);
+	    temperatureUnit = parse("temperatureUnit", periodObj);
+	    windSpeed = parse("windSpeed", periodObj);
+	    windDirection = parse("windDirection", periodObj);
+	    shortForecast = parse("shortForecast", periodObj);
+	    id++;
+	}
+    }
+
+    class Coordinates {
+	// field
+	double latitude;
+	double longitude;
+	DecimalFormat coordFormat = new DecimalFormat("00.0000");
+
+	// constructor
+	public Coordinates(double[] coordinates) {
+	    latitude = coordFormat.format(coordinates[0]);
+	    longitude = coordFormat.format(coordinates[1]);
+	}
+    }
+
+   // TODO: constructor 
     public NwsReader(double[] coordinates) { //constrtor takes coordinates
-	// TODO: constructor
+	DecimalFormat coordFormat = new DecimalFormat("00.0000");
+	currentCoordinates = new Coordinates(coordinates); 	
+ 
+	nwsUrl = "https://api.weather.gov/points/" 
+	    + currentCoordinates.latitude + ","
+	    + currentCorrdinates.longitude;
 
-    } 
-    */
+	String nwsJson = IOUtils.toString(new URL(nwsUrl).openStream());
+	nwsObj = new Gson().fromJson(nwsJson, JsonObject.class);
+
+
+    }     
 
     // TODO: declare class methods
 
-    /*
-    private static void print() {
+    private String parse(String key, JsonObject object) {
+	String value = parser.parse(object
+	    .get(key)
+	    .toString())
+	    .getAsString();
+
+	return value;
+    }
+
+    private String parseUrl(String key, JsonObject object){
+	String value = IOUtils.toString(
+		new URL(parse(key, object).openStream()));
+	
+	return value;
+    }
+
+    private static void printHeader() {
 	DecimalFormat coordFormat = new DecimalFormat("00.0000");
 	System.out.print("\n" + city + ", " + state + "    ");
 	System.out.println(coordFormat.format(coordinates[0]) + ", "
 		+ coordFormat.format(coordinates[1]));
-	System.out.println("Forecast Office: " + forecastOfficeName);
+	System.out.println("Forecast Office: " + forecastOffice);
 	System.out.println("Radar Station " + radarStation + ": " 
 		+ "https://radar.weather.gov/station/" 
 		+ radarStation + "/standard\n");
     }
-    */
-
+    
 
     public static void main( String[] args ) throws IOException {
-
-
 	// get first json from NWS url points
 	//
 	// Baltimore/Washington DC
-	//String nwsUrl = "https://api.weather.gov/points/38.8894,-77.0352"; 
+	//nwsUrl = "https://api.weather.gov/points/38.8894,-77.0352"; 
 	//
 	//
 	// Seattle/Wasington
-	String nwsUrl = "https://api.weather.gov/points/47.5896,-122.3331"; 
+	nwsUrl = "https://api.weather.gov/points/47.5896,-122.3331"; 
 	//
 	// Davie/FL
-	//String nwsUrl = "https://api.weather.gov/points/26.0813,-80.2802"; 
+	//nwsUrl = "https://api.weather.gov/points/26.0813,-80.2802"; 
 
 	String nwsJson = IOUtils.toString(new URL(nwsUrl).openStream());
-	//System.out.println(json); // DEGBUG   
-	JsonObject nwsObj = new Gson().fromJson(nwsJson, JsonObject.class);
+	nwsObj = new Gson().fromJson(nwsJson, JsonObject.class);
 
-	JsonParser parser = new JsonParser();
+	//JsonParser parser = new JsonParser();
 
+	/*
 	// get geometry json, and get coordinates array from geometry json
 	JsonObject geometryObj = nwsObj.getAsJsonObject("geometry");
+	
 	double[] coordinates = {
 	    parser.parse(geometryObj
 		    .getAsJsonArray("coordinates")
@@ -110,60 +166,44 @@ public class NwsReader { // TODO: refactor to a class package for terminal reade
 		.getAsDouble()
 	};
 	DecimalFormat coordFormat = new DecimalFormat("00.0000");
+	*/
 
 	// get properties json
-	JsonObject propertiesObj = nwsObj.getAsJsonObject("properties");
+	propertiesObj = nwsObj.getAsJsonObject("properties");
 
 	// get and parse forcast office json
-	String forecastOfficeJson = IOUtils.toString(
-		new URL(parser.parse(propertiesObj
-			.get("forecastOffice")
-			.toString()).getAsString())
-		.openStream());
-	JsonObject forecastOfficeObj = new Gson()
+	String forecastOfficeJson = parseUrl("forecastOffice", propertiesObj);
+	forecastOfficeObj = new Gson()
 	    .fromJson(forecastOfficeJson, JsonObject.class);
-	String forecastOfficeName = parser.parse(forecastOfficeObj
-		.get("name")
-		.toString()).getAsString();
+	forecastOffice = parse("name", forecastOfficeObj);
 
 	// get relative localtion json and its properties json
-	JsonObject relativeLocationObj = propertiesObj
+	relativeLocationObj = propertiesObj
 	    .getAsJsonObject("relativeLocation");
-	JsonObject relLocPropertiesObj = relativeLocationObj
+	relLocPropertiesObj = relativeLocationObj
 	    .getAsJsonObject("properties");
 
 	// get and parse city and state
-	String city = parser.parse(relLocPropertiesObj
-		.get("city")
-		.toString())
-	    .getAsString();
-	String state = parser.parse(relLocPropertiesObj
-		.get("state")
-		.toString())
-	    .getAsString();
-
+	city = parse("city", relLocPropertiesObj)
+	state = parse("state", relLocPropertiesObj)
+	
 	// get and parse radar station
-	String radarStation = parser.parse(propertiesObj
-		.get("radarStation")
-		.toString())
-	    .getAsString();
+	radarStation = parse("radarStation", propertiesObj)
 
 	// get and parse forecast url from first json
-	String forecastJson = IOUtils.toString(
-		new URL(parser.parse(propertiesObj
-			.get("forecast")
-			.toString()).getAsString())
-		.openStream());
-	JsonObject forecastObj = new Gson()
+	String forecastJson = parseUrl("forecast", propertiesObj);
+	forecastObj = new Gson()
 	    .fromJson(forecastJson, JsonObject.class);
 
 	// get properties json, and get periods json array
-	JsonObject forecastPropertiesObj = forecastObj
+	forecastPropertiesObj = forecastObj
 	    .getAsJsonObject("properties");
-	JsonArray forecastPeriods = forecastPropertiesObj
+	forecastPeriodsArr = forecastPropertiesObj
 	    .getAsJsonArray("periods");
 
 	// output formatted header 
+	printHeader();
+	/*
 	System.out.print("\n" + city + ", " + state + "    ");
 	System.out.println(coordFormat.format(coordinates[0]) + ", " 
 		+ coordFormat.format(coordinates[1]));
@@ -171,41 +211,21 @@ public class NwsReader { // TODO: refactor to a class package for terminal reade
 	System.out.println("Radar Station " + radarStation + ": " 
 		+ "https://radar.weather.gov/station/" 
 		+ radarStation + "/standard\n");
+	*/
 
 	// get and parse values for each period
-	for (JsonElement period : forecastPeriods) {
-	    JsonObject periodObj = period.getAsJsonObject();
-
-	    String name = parser.parse(periodObj
-		    .get("name")
-		    .toString())
-		.getAsString();
-	    String temperature = parser.parse(periodObj
-		    .get("temperature")
-		    .toString())
-		.getAsString();
-	    String temperatureUnit = parser.parse(periodObj
-		    .get("temperatureUnit")
-		    .toString())
-		.getAsString();
-	    String windSpeed = parser.parse(periodObj
-		    .get("windSpeed")
-		    .toString())
-		.getAsString();
-	    String windDirection = parser.parse(periodObj
-		    .get("windDirection")
-		    .toString())
-		.getAsString();
-	    String shortForecast = parser.parse(periodObj
-		    .get("shortForecast")
-		    .toString())
-		.getAsString();
-
+	
+	int i = 0;
+	for (JsonElement period : forecastPeriodsArr) {
+	    forecastPeriods[i] = new ForecastPeriod(period);
+ 
+	    /*
 	    // output formatted values
 	    System.out.println(name);
 	    System.out.println(temperature + temperatureUnit + " " 
 		    + windDirection + " " + windSpeed);
 	    System.out.println(shortForecast + ".\n" );
+	    */
 
 	}
 	System.out.println( "NwsReader!" );	    
