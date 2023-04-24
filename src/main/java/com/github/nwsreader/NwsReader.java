@@ -20,7 +20,7 @@ import com.google.gson.JsonParser;
  * an app to read National Weather Service json data and output to terminal.
  *
  */
-public class NwsReader { // TODO: refactor to a class package for terminal reader and an android widget.
+public class NwsReader { 
 
     // field
     private String nwsUrl;
@@ -34,17 +34,17 @@ public class NwsReader { // TODO: refactor to a class package for terminal reade
     private JsonArray forecastPeriodsArr;
 
     public String city;
-    public String State;
+    public String state;
     public String forecastOffice;
     public String radarStation;
-    
-    private Array<ForecastPeriod> forecastPeriods[];
+
+    private ForecastPeriod[] ForecastPeriods;
 
     private double[] coordinates;
 
     private Coordinates currentCoordinates;
     private Coordinates nwsCoordinates;
-    
+
     JsonParser parser = new JsonParser();
 
     class ForecastPeriod { 
@@ -71,6 +71,14 @@ public class NwsReader { // TODO: refactor to a class package for terminal reade
 	    shortForecast = parse("shortForecast", periodObj);
 	    id++;
 	}
+
+	public void print() {
+	    System.out.println("\n" + name);
+	    System.out.print(temperature + temperatureUnit + " ");
+	    System.out.println(windDirection + " " + windSpeed);
+	    System.out.println(shortForecast + ".\n");
+
+	}
     }
 
     class Coordinates {
@@ -81,92 +89,23 @@ public class NwsReader { // TODO: refactor to a class package for terminal reade
 
 	// constructor
 	public Coordinates(double[] coordinates) {
-	    latitude = coordFormat.format(coordinates[0]);
-	    longitude = coordFormat.format(coordinates[1]);
+	    latitude = coordinates[0];
+	    longitude = coordinates[1];
 	}
     }
 
-   // TODO: constructor 
-    public NwsReader(double[] coordinates) { //constrtor takes coordinates
+    // constructor 
+    public NwsReader(double[] coordinates) throws IOException { 
+	//constrtor takes coordinates
 	DecimalFormat coordFormat = new DecimalFormat("00.0000");
 	currentCoordinates = new Coordinates(coordinates); 	
- 
+
+	// get first json from NWS url points
 	nwsUrl = "https://api.weather.gov/points/" 
 	    + currentCoordinates.latitude + ","
-	    + currentCorrdinates.longitude;
-
+	    + currentCoordinates.longitude;
 	String nwsJson = IOUtils.toString(new URL(nwsUrl).openStream());
 	nwsObj = new Gson().fromJson(nwsJson, JsonObject.class);
-
-
-    }     
-
-    // TODO: declare class methods
-
-    private String parse(String key, JsonObject object) {
-	String value = parser.parse(object
-	    .get(key)
-	    .toString())
-	    .getAsString();
-
-	return value;
-    }
-
-    private String parseUrl(String key, JsonObject object){
-	String value = IOUtils.toString(
-		new URL(parse(key, object).openStream()));
-	
-	return value;
-    }
-
-    private static void printHeader() {
-	DecimalFormat coordFormat = new DecimalFormat("00.0000");
-	System.out.print("\n" + city + ", " + state + "    ");
-	System.out.println(coordFormat.format(coordinates[0]) + ", "
-		+ coordFormat.format(coordinates[1]));
-	System.out.println("Forecast Office: " + forecastOffice);
-	System.out.println("Radar Station " + radarStation + ": " 
-		+ "https://radar.weather.gov/station/" 
-		+ radarStation + "/standard\n");
-    }
-    
-
-    public static void main( String[] args ) throws IOException {
-	// get first json from NWS url points
-	//
-	// Baltimore/Washington DC
-	//nwsUrl = "https://api.weather.gov/points/38.8894,-77.0352"; 
-	//
-	//
-	// Seattle/Wasington
-	nwsUrl = "https://api.weather.gov/points/47.5896,-122.3331"; 
-	//
-	// Davie/FL
-	//nwsUrl = "https://api.weather.gov/points/26.0813,-80.2802"; 
-
-	String nwsJson = IOUtils.toString(new URL(nwsUrl).openStream());
-	nwsObj = new Gson().fromJson(nwsJson, JsonObject.class);
-
-	//JsonParser parser = new JsonParser();
-
-	/*
-	// get geometry json, and get coordinates array from geometry json
-	JsonObject geometryObj = nwsObj.getAsJsonObject("geometry");
-	
-	double[] coordinates = {
-	    parser.parse(geometryObj
-		    .getAsJsonArray("coordinates")
-		    .get(1)
-		    .toString())
-		.getAsDouble(),
-	    parser.parse(geometryObj
-		    .getAsJsonArray("coordinates")
-		    .get(0)
-		    .toString())
-		.getAsDouble()
-	};
-	DecimalFormat coordFormat = new DecimalFormat("00.0000");
-	*/
 
 	// get properties json
 	propertiesObj = nwsObj.getAsJsonObject("properties");
@@ -184,11 +123,11 @@ public class NwsReader { // TODO: refactor to a class package for terminal reade
 	    .getAsJsonObject("properties");
 
 	// get and parse city and state
-	city = parse("city", relLocPropertiesObj)
-	state = parse("state", relLocPropertiesObj)
-	
+	city = parse("city", relLocPropertiesObj);
+	state = parse("state", relLocPropertiesObj);
+
 	// get and parse radar station
-	radarStation = parse("radarStation", propertiesObj)
+	radarStation = parse("radarStation", propertiesObj);
 
 	// get and parse forecast url from first json
 	String forecastJson = parseUrl("forecast", propertiesObj);
@@ -201,35 +140,74 @@ public class NwsReader { // TODO: refactor to a class package for terminal reade
 	forecastPeriodsArr = forecastPropertiesObj
 	    .getAsJsonArray("periods");
 
-	// output formatted header 
-	printHeader();
-	/*
+	// get and parse values for each period
+	// TODO: null pointer exception error
+	int i = 0;
+	for (JsonElement period : forecastPeriodsArr) {
+	    ForecastPeriods[i] = new ForecastPeriod(period);
+
+	    i++;
+	}
+
+
+    }     
+
+    // methods
+    private String parse(String key, JsonObject object) {
+	String value = parser.parse(object
+		.get(key)
+		.toString())
+	    .getAsString();
+
+	return value;
+    }
+
+    private String parseUrl(String key, JsonObject object) throws IOException, MalformedURLException {
+	String value = IOUtils.toString(
+		new URL(parse(key, object))
+		.openStream());
+
+	return value;
+    }
+
+    private void printHeader() {
+	DecimalFormat coordFormat = new DecimalFormat("00.0000");
 	System.out.print("\n" + city + ", " + state + "    ");
-	System.out.println(coordFormat.format(coordinates[0]) + ", " 
+	System.out.println(coordFormat.format(coordinates[0]) + ", "
 		+ coordFormat.format(coordinates[1]));
-	System.out.println("Forecast Office: " + forecastOfficeName);
+	System.out.println("Forecast Office: " + forecastOffice);
 	System.out.println("Radar Station " + radarStation + ": " 
 		+ "https://radar.weather.gov/station/" 
 		+ radarStation + "/standard\n");
-	*/
+    }
 
-	// get and parse values for each period
-	
-	int i = 0;
-	for (JsonElement period : forecastPeriodsArr) {
-	    forecastPeriods[i] = new ForecastPeriod(period);
- 
-	    /*
-	    // output formatted values
-	    System.out.println(name);
-	    System.out.println(temperature + temperatureUnit + " " 
-		    + windDirection + " " + windSpeed);
-	    System.out.println(shortForecast + ".\n" );
-	    */
+    private void printForecastPeriods() {
+	for (ForecastPeriod period : ForecastPeriods) {
+	    period.print();
+	}	
+    }
 
-	}
-	System.out.println( "NwsReader!" );	    
 
-    }   
+    public static void main( String[] args ) throws IOException {
+	// coordinate points 
+	//
+	// Baltimore/Washington DC
+	double[] coordBaltimore = {38.8894,-77.0352}; 
+	//
+	//
+	// Seattle/Wasington
+	//double[] coordSeattle = [47.5896,-122.3331]; 
+	//
+	// Davie/FL
+	//double[] coordDavie = [26.0813,-80.2802]; 
 
-}
+	NwsReader testReader = new NwsReader(coordBaltimore);
+	testReader.printHeader();
+	testReader.printForecastPeriods();
+
+	System.out.println("NwsReader!");
+    }
+
+}   
+
+
