@@ -5,7 +5,7 @@ import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DecimalFormat;
-import java.util.Arrays;
+import java.util.ArrayList;
 
 import org.apache.commons.io.IOUtils;
 
@@ -38,12 +38,11 @@ public class NwsReader {
     public String forecastOffice;
     public String radarStation;
 
-    private ForecastPeriod[] ForecastPeriods;
-
-    private double[] coordinates;
-
     private Coordinates currentCoordinates;
     private Coordinates nwsCoordinates;
+
+    private ArrayList<ForecastPeriod> ForecastPeriods 
+	= new ArrayList<ForecastPeriod>();
 
     JsonParser parser = new JsonParser();
 
@@ -94,6 +93,7 @@ public class NwsReader {
 	}
     }
 
+    
     // constructor 
     public NwsReader(double[] coordinates) throws IOException { 
 	//constrtor takes coordinates
@@ -141,15 +141,9 @@ public class NwsReader {
 	    .getAsJsonArray("periods");
 
 	// get and parse values for each period
-	// TODO: null pointer exception error
-	int i = 0;
 	for (JsonElement period : forecastPeriodsArr) {
-	    ForecastPeriods[i] = new ForecastPeriod(period);
-
-	    i++;
+	    ForecastPeriods.add(new ForecastPeriod(period));
 	}
-
-
     }     
 
     // methods
@@ -173,8 +167,9 @@ public class NwsReader {
     private void printHeader() {
 	DecimalFormat coordFormat = new DecimalFormat("00.0000");
 	System.out.print("\n" + city + ", " + state + "    ");
-	System.out.println(coordFormat.format(coordinates[0]) + ", "
-		+ coordFormat.format(coordinates[1]));
+	// TODO: NULLPOINTER ERROR
+	System.out.println(coordFormat.format(currentCoordinates.latitude) + ", "
+		+ coordFormat.format(currentCoordinates.longitude));
 	System.out.println("Forecast Office: " + forecastOffice);
 	System.out.println("Radar Station " + radarStation + ": " 
 		+ "https://radar.weather.gov/station/" 
