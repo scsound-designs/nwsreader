@@ -1,4 +1,4 @@
-package com.github.nwsreader;
+package com.github.scsounddesigns.nwsreader;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -93,7 +93,7 @@ public class NwsReader {
 	}
     }
 
-    
+
     // constructor 
     public NwsReader(double[] coordinates) throws IOException { 
 	//constrtor takes coordinates
@@ -164,10 +164,9 @@ public class NwsReader {
 	return value;
     }
 
-    private void printHeader() {
+    public void printHeader() {
 	DecimalFormat coordFormat = new DecimalFormat("00.0000");
 	System.out.print("\n" + city + ", " + state + "    ");
-	// TODO: NULLPOINTER ERROR
 	System.out.println(coordFormat.format(currentCoordinates.latitude) + ", "
 		+ coordFormat.format(currentCoordinates.longitude));
 	System.out.println("Forecast Office: " + forecastOffice);
@@ -176,32 +175,32 @@ public class NwsReader {
 		+ radarStation + "/standard\n");
     }
 
-    private void printForecastPeriods() {
+    public void printForecastPeriods() {
 	for (ForecastPeriod period : ForecastPeriods) {
 	    period.print();
 	}	
     }
 
 
-    public static void main( String[] args ) throws IOException {
-	// coordinate points 
-	//
-	// Baltimore/Washington DC
-	double[] coordBaltimore = {38.8894,-77.0352}; 
-	//
-	//
-	// Seattle/Wasington
-	//double[] coordSeattle = [47.5896,-122.3331]; 
-	//
-	// Davie/FL
-	//double[] coordDavie = [26.0813,-80.2802]; 
+    /*public static void main( String[] args ) throws IOException {
+    // coordinate points 
+    //
+    // Baltimore/Washington DC
+    double[] coordBaltimore = {38.8894,-77.0352}; 
+    //
+    //
+    // Seattle/Wasington
+    //double[] coordSeattle = [47.5896,-122.3331]; 
+    //
+    // Davie/FL
+    //double[] coordDavie = [26.0813,-80.2802]; 
 
-	NwsReader testReader = new NwsReader(coordBaltimore);
-	testReader.printHeader();
-	testReader.printForecastPeriods();
+    NwsReader testReader = new NwsReader(coordBaltimore);
+    testReader.printHeader();
+    testReader.printForecastPeriods();
 
-	System.out.println("NwsReader!");
-    }
+    System.out.println("NwsReader!");
+    }*/
 
 }   
 

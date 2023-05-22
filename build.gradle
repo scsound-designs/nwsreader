@@ -11,7 +11,7 @@ plugins {
 }
 
 application {
-    mainClass = 'com.github.nwsreader.NwsReader'
+    mainClass = 'com.github.scsounddesigns.nwsreader.Main'
 }
 
 repositories {
