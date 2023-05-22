@@ -7,11 +7,6 @@
 plugins {
     id 'java-library'
     id 'maven-publish'
-    id 'application'
-}
-
-application {
-    mainClass = 'com.github.scsounddesigns.nwsreader.Main'
 }
 
 repositories {
@@ -27,7 +22,7 @@ dependencies {
     testImplementation 'junit:junit:4.11'
 }
 
-group = 'com.github.nwsreader'
+group = 'com.github.scsounddesigns.nwsreader'
 version = '1.0-SNAPSHOT'
 description = 'nwsreader'
 java.sourceCompatibility = JavaVersion.VERSION_1_8
