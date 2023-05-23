@@ -19,8 +19,8 @@ public class NwsReaderTest
 	// check for radar station KLWX
 	boolean isStation;
 	// Baltimore, Washington D.C.
-	double[] testCoord = {38.8894,-77.0352};
-	NwsReader testReader = new NwsReader(testCoord);
+	double[] testCoordinates = {38.8894,-77.0352};
+	NwsReader testReader = new NwsReader(testCoordinates);
 
 	if (testReader.radarStation.equals("KLWX")) {
 	    isStation = true;

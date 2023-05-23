@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.github.scsounddesigns.nwsreader.NwsReaderTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2023-05-22T04:29:17" hostname="fedora" time="0.835">
+<testsuite name="com.github.scsounddesigns.nwsreader.NwsReaderTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2023-05-23T07:57:11" hostname="fedora" time="1.446">
   <properties/>
-  <testcase name="shouldAnswerWithTrue" classname="com.github.scsounddesigns.nwsreader.NwsReaderTest" time="0.835"/>
+  <testcase name="shouldAnswerWithTrue" classname="com.github.scsounddesigns.nwsreader.NwsReaderTest" time="1.446"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

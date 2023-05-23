@@ -87,7 +87,7 @@ public class NwsReader {
 	DecimalFormat coordFormat = new DecimalFormat("00.0000");
 
 	// constructor
-	public Coordinates(double[] coordinates) {
+	public Coordinates(double[] coordinates ) {
 	    latitude = coordinates[0];
 	    longitude = coordinates[1];
 	}
@@ -96,8 +96,7 @@ public class NwsReader {
 
     // constructor 
     public NwsReader(double[] coordinates) throws IOException { 
-	//constrtor takes coordinates
-	DecimalFormat coordFormat = new DecimalFormat("00.0000");
+	//constrtor takes latitude and longitude 
 	currentCoordinates = new Coordinates(coordinates); 	
 
 	// get first json from NWS url points
