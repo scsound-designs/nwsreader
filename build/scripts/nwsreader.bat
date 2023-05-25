@@ -72,7 +72,7 @@ set CLASSPATH=%APP_HOME%\lib\nwsreader-1.0-SNAPSHOT.jar;%APP_HOME%\lib\gson-2.10
 
 
 @rem Execute nwsreader
-"%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %NWSREADER_OPTS%  -classpath "%CLASSPATH%" com.github.scsounddesigns.nwsreader.Main %*
+"%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %NWSREADER_OPTS%  -classpath "%CLASSPATH%"  %*
 
 :end
 @rem End local scope for the variables with windows NT shell

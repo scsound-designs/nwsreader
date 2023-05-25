@@ -1,11 +1,17 @@
 package com.github.scsounddesigns.nwsreader;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.StringReader;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+
+
+import javax.net.ssl.HttpsURLConnection;
 
 import org.apache.commons.io.IOUtils;
 
@@ -23,7 +29,8 @@ import com.google.gson.JsonParser;
 public class NwsReader { 
 
     // field
-    private String nwsUrl;
+    private String nwsUrlString;
+    private String nwsJsonString;
     private JsonObject nwsObj;
     private JsonObject propertiesObj;
     private JsonObject relativeLocationObj;
@@ -36,7 +43,7 @@ public class NwsReader {
     public String city;
     public String state;
     public String forecastOffice;
-    public String radarStation;
+   public String radarStation;
 
     private Coordinates currentCoordinates;
     private Coordinates nwsCoordinates;
@@ -100,11 +107,34 @@ public class NwsReader {
 	currentCoordinates = new Coordinates(coordinates); 	
 
 	// get first json from NWS url points
-	nwsUrl = "https://api.weather.gov/points/" 
+	nwsUrlString = "https://api.weather.gov/points/" 
 	    + currentCoordinates.latitude + ","
 	    + currentCoordinates.longitude;
-	String nwsJson = IOUtils.toString(new URL(nwsUrl).openStream());
-	nwsObj = new Gson().fromJson(nwsJson, JsonObject.class);
+
+	URL nwsUrl = new URL(nwsUrlString);
+	HttpsURLConnection nwsConnection = (HttpsURLConnection)nwsUrl.openConnection();
+	nwsConnection.setRequestMethod("GET");
+	int responseCode = nwsConnection.getResponseCode();
+	if (responseCode == HttpsURLConnection.HTTP_OK) {
+	    BufferedReader in = new BufferedReader(
+		    new InputStreamReader(nwsConnection.getInputStream()));
+	    String inputLine;
+	    StringBuffer response = new StringBuffer();
+
+	    while ((inputLine = in.readLine()) !=null) {
+		response.append(inputLine);
+	    }
+	    in.close();
+
+	    nwsJsonString = response.toString();
+
+	} else {
+	    System.out.println("GET request failed.");
+
+	}
+
+	//String nwsJson = IOUtils.toString(new URL(nwsUrl).openStream());
+	nwsObj = new Gson().fromJson(nwsJsonString, JsonObject.class);
 
 	// get properties json
 	propertiesObj = nwsObj.getAsJsonObject("properties");
@@ -181,25 +211,9 @@ public class NwsReader {
     }
 
 
-    /*public static void main( String[] args ) throws IOException {
-    // coordinate points 
-    //
-    // Baltimore/Washington DC
-    double[] coordBaltimore = {38.8894,-77.0352}; 
-    //
-    //
-    // Seattle/Wasington
-    //double[] coordSeattle = [47.5896,-122.3331]; 
-    //
-    // Davie/FL
-    //double[] coordDavie = [26.0813,-80.2802]; 
+    public static void main( String[] args ) {
 
-    NwsReader testReader = new NwsReader(coordBaltimore);
-    testReader.printHeader();
-    testReader.printForecastPeriods();
-
-    System.out.println("NwsReader!");
-    }*/
+    }
 
 }   
 
