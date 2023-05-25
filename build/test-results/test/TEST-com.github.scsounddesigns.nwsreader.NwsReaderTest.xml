@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.github.scsounddesigns.nwsreader.NwsReaderTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2023-05-25T23:02:23" hostname="fedora" time="1.463">
+<testsuite name="com.github.scsounddesigns.nwsreader.NwsReaderTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2023-05-25T23:57:24" hostname="fedora" time="2.164">
   <properties/>
-  <testcase name="foundStationKATX()" classname="com.github.scsounddesigns.nwsreader.NwsReaderTest" time="1.282"/>
-  <testcase name="foundStationKLWX()" classname="com.github.scsounddesigns.nwsreader.NwsReaderTest" time="0.178"/>
+  <testcase name="foundStationKATX()" classname="com.github.scsounddesigns.nwsreader.NwsReaderTest" time="1.685"/>
+  <testcase name="foundStationKLWX()" classname="com.github.scsounddesigns.nwsreader.NwsReaderTest" time="0.476"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
