@@ -1,17 +1,19 @@
 package com.github.scsounddesigns.nwsreader;
 
 import java.io.BufferedReader;
+import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
-
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 
-import javax.net.ssl.HttpsURLConnection;
+//import javax.net.ssl.HttpsURLConnection;
 
 import org.apache.commons.io.IOUtils;
 
@@ -112,7 +114,25 @@ public class NwsReader {
 	    + currentCoordinates.longitude;
 
 	URL nwsUrl = new URL(nwsUrlString);
-	HttpsURLConnection nwsConnection = (HttpsURLConnection)nwsUrl.openConnection();
+	HttpURLConnection nwsConnection = (HttpURLConnection)nwsUrl.openConnection();
+	try {
+	    BufferedReader in = new BufferedReader(
+		    new InputStreamReader(nwsConnection.getInputStream()));
+	    String inputLine;
+	    StringBuffer response = new StringBuffer();
+
+	    while ((inputLine = in.readLine()) !=null) {
+		response.append(inputLine);
+	    }
+	    in.close();
+
+	    nwsJsonString = response.toString();
+
+	} finally {
+		nwsConnection.disconnect();
+	}
+
+	/*
 	nwsConnection.setRequestMethod("GET");
 	int responseCode = nwsConnection.getResponseCode();
 	if (responseCode == HttpsURLConnection.HTTP_OK) {
@@ -132,6 +152,7 @@ public class NwsReader {
 	    System.out.println("GET request failed.");
 
 	}
+	*/
 
 	//String nwsJson = IOUtils.toString(new URL(nwsUrl).openStream());
 	nwsObj = new Gson().fromJson(nwsJsonString, JsonObject.class);
