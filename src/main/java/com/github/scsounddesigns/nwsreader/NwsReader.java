@@ -115,6 +115,8 @@ public class NwsReader {
 
 	URL nwsUrl = new URL(nwsUrlString);
 	HttpURLConnection nwsConnection = (HttpURLConnection)nwsUrl.openConnection();
+	nwsConnection.setRequestMethod("GET");
+	nwsConnection.connect();
 	try {
 	    InputStream in = new BufferedInputStream(nwsConnection.getInputStream());
 
