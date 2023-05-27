@@ -116,43 +116,17 @@ public class NwsReader {
 	URL nwsUrl = new URL(nwsUrlString);
 	HttpURLConnection nwsConnection = (HttpURLConnection)nwsUrl.openConnection();
 	try {
-	    BufferedReader in = new BufferedReader(
-		    new InputStreamReader(nwsConnection.getInputStream()));
-	    String inputLine;
-	    StringBuffer response = new StringBuffer();
+	    InputStream in = new BufferedInputStream(nwsConnection.getInputStream());
 
-	    while ((inputLine = in.readLine()) !=null) {
-		response.append(inputLine);
-	    }
-	    in.close();
+	    nwsJsonString = IOUtils.toString(in);
 
-	    nwsJsonString = response.toString();
+	} catch (IOException e) {
+		System.out.println("HTTP ERROR: " + nwsConnection.getErrorStream());
+		System.out.println(nwsConnection.getHeaderFields());
 
 	} finally {
 		nwsConnection.disconnect();
 	}
-
-	/*
-	nwsConnection.setRequestMethod("GET");
-	int responseCode = nwsConnection.getResponseCode();
-	if (responseCode == HttpsURLConnection.HTTP_OK) {
-	    BufferedReader in = new BufferedReader(
-		    new InputStreamReader(nwsConnection.getInputStream()));
-	    String inputLine;
-	    StringBuffer response = new StringBuffer();
-
-	    while ((inputLine = in.readLine()) !=null) {
-		response.append(inputLine);
-	    }
-	    in.close();
-
-	    nwsJsonString = response.toString();
-
-	} else {
-	    System.out.println("GET request failed.");
-
-	}
-	*/
 
 	//String nwsJson = IOUtils.toString(new URL(nwsUrl).openStream());
 	nwsObj = new Gson().fromJson(nwsJsonString, JsonObject.class);
