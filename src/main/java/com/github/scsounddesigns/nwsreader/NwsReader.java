@@ -13,7 +13,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 
-//import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.HttpsURLConnection;
 
 import org.apache.commons.io.IOUtils;
 
@@ -114,8 +114,9 @@ public class NwsReader {
 	    + currentCoordinates.longitude;
 
 	URL nwsUrl = new URL(nwsUrlString);
-	HttpURLConnection nwsConnection = (HttpURLConnection)nwsUrl.openConnection();
+	HttpsURLConnection nwsConnection = (HttpsURLConnection)nwsUrl.openConnection();
 	nwsConnection.setRequestMethod("GET");
+	//nwsConnection.setRequestProperty("User-agent", System.getProperty("http.agent"));
 	nwsConnection.connect();
 	try {
 	    InputStream in = new BufferedInputStream(nwsConnection.getInputStream());
