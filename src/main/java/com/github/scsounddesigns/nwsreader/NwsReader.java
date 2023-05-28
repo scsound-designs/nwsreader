@@ -54,7 +54,7 @@ public class NwsReader {
 	= new ArrayList<ForecastPeriod>();
 
     JsonParser parser = new JsonParser();
-/*
+
     class ForecastPeriod { 
 	//field
 	String name;
@@ -88,7 +88,7 @@ public class NwsReader {
 
 	}
     }
-*//*
+
     class Coordinates {
 	// field
 	double latitude;
@@ -101,7 +101,7 @@ public class NwsReader {
 	    longitude = coordinates[1];
 	}
     }
-*/
+
 
     // constructor 
     public NwsReader(double[] coordinates) throws IOException { 
@@ -116,7 +116,7 @@ public class NwsReader {
 	URL nwsUrl = new URL(nwsUrlString);
 	HttpsURLConnection nwsConnection = (HttpsURLConnection)nwsUrl.openConnection();
 	nwsConnection.setRequestMethod("GET");
-	//nwsConnection.setRequestProperty("User-agent", System.getProperty("http.agent"));
+//	nwsConnection.setRequestProperty("User-agent", System.getProperty("http.agent"));
 	nwsConnection.connect();
 	try {
 	    InputStream in = new BufferedInputStream(nwsConnection.getInputStream());
