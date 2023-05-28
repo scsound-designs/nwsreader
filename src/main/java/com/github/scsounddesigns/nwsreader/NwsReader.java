@@ -45,7 +45,7 @@ public class NwsReader {
     public String city;
     public String state;
     public String forecastOffice;
-   public String radarStation;
+    public String radarStation;
 
     private Coordinates currentCoordinates;
     private Coordinates nwsCoordinates;
@@ -54,7 +54,7 @@ public class NwsReader {
 	= new ArrayList<ForecastPeriod>();
 
     JsonParser parser = new JsonParser();
-
+/*
     class ForecastPeriod { 
 	//field
 	String name;
@@ -88,7 +88,7 @@ public class NwsReader {
 
 	}
     }
-
+*//*
     class Coordinates {
 	// field
 	double latitude;
@@ -101,7 +101,7 @@ public class NwsReader {
 	    longitude = coordinates[1];
 	}
     }
-
+*/
 
     // constructor 
     public NwsReader(double[] coordinates) throws IOException { 
